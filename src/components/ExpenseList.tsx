@@ -6,7 +6,6 @@ import firebaseApp from '../firebase';
 
 import { Expense } from '../types';
 import ExpenseCard from "./Expense";
-import {Card} from "react-bootstrap";
 
 const ExpenseList = () => {
     const db = getDatabase(firebaseApp);
