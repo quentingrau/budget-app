@@ -1,13 +1,10 @@
-import { ChangeEvent, useState } from "react";
-import { Button, Form } from 'react-bootstrap';
-import { getDatabase, ref, push } from 'firebase/database';
+import {ChangeEvent, useState} from "react";
+import {Button, Form} from 'react-bootstrap';
 
-// Import firebase configuration from firebase.ts file
-import firebaseApp from '../firebase';
 import {Category} from "../types";
+import {ExpenseService} from "../services/ExpenseService";
 
-const ExpenseForm = () => {
-    const db = getDatabase(firebaseApp);
+const AddExpenseForm = ({handleClose}: { handleClose?: () => void}) => {
 
     const [title, setTitle] = useState('');
     const [amount, setAmount] = useState(0);
@@ -25,19 +22,13 @@ const ExpenseForm = () => {
         setCategory(e.target.value);
     };
 
-    const addTodo = () => {
-        const expenseRef = ref(db, '/expenses');
-        const expense = {
-            title,
-            amount,
-            category,
-            dateTimestamp: Date.now()
-        };
-        push(expenseRef, expense);
-    };
+    const onAddClick = () => {
+        ExpenseService.addExpense({ title, amount, category});
+        if (handleClose) handleClose();
+    }
 
     return (
-        <Form>
+        <Form onSubmit={(e) => e.preventDefault()}>
             <Form.Label>Titre</Form.Label>
             <Form.Control onChange={handleTitleChange} />
             <Form.Label>Montant</Form.Label>
@@ -49,11 +40,11 @@ const ExpenseForm = () => {
                     return <option key={category}>{category}</option>
                 })}
             </Form.Select>
-            <Button className='budget-btn' type="submit" onClick={addTodo}>
+            <Button className='budget-btn' type="submit" onClick={onAddClick}>
                 Ajouter
             </Button>
         </Form>
     )
 }
 
-export default ExpenseForm;
+export default AddExpenseForm;

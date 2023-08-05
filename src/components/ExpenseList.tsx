@@ -6,6 +6,7 @@ import firebaseApp from '../firebase';
 
 import { Expense } from '../types';
 import ExpenseCard from "./Expense";
+import {isOnSameMonth} from "../utils/functions";
 
 const ExpenseList = () => {
     const db = getDatabase(firebaseApp);
@@ -24,20 +25,23 @@ const ExpenseList = () => {
                         title: expenses[id].title,
                         date: new Date(expenses[id].dateTimestamp),
                         amount: expenses[id].amount,
-                        category: expenses[id].category
+                        category: expenses[id].category,
+                        key: id
                     });
             }
 
             setExpenseList(newExpenseList);
         });
     }, [db]);
-    console.log(expenseList);
     return (
         <div>
+            <h2>Ce mois-ci :</h2>
+            <div className="monthly-amount">{expenseList.filter(expense => isOnSameMonth(expense.date)).reduce((accumulator, currentValue) => accumulator + currentValue.amount, 0)}€</div>
+            <hr/>
             <h2>Dépenses</h2>
             <div className='expenses'>
                 <ExpenseCard />
-                {expenseList.map((expense, index) => {
+                {expenseList.sort((a, b) => a.date.getTime() - b.date.getTime()).map((expense, index) => {
                     return <ExpenseCard key={index} expense={expense}/>;
                 })}
             </div>

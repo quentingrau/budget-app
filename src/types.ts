@@ -5,16 +5,17 @@ export type Todo = {
 }
 
 export type RawExpense = {
-    id: string,
-    title: string,
-    amount: number,
+    id: string;
+    title: string;
+    amount: number;
     dateTimestamp: number
     category: Category
 }
 
 export type Expense = {
-    title: string,
-    amount: number,
+    key: string;
+    title: string;
+    amount: number;
     date: Date
     category: Category
 }

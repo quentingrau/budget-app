@@ -1,36 +1,33 @@
 import {Badge, Button, Card} from "react-bootstrap";
+import ModalContainer from './ModalContainer';
 import { Expense } from "../types";
-import { PlusLg } from 'react-bootstrap-icons';
+import AddExpenseForm from "./AddExpenseForm";
+import UpdateExpenseForm from "./UpdateExpenseForm";
 
 const ExpenseCard = ({ expense }: { expense?: Expense}) => {
     if (expense) {
         return (
             <Card className='expense'>
-                <Card.Header>
-                    <div className='expense-header'>
-                        {expense.title}
-                        <Button size='sm'>Modifier</Button>
-                    </div>
-                </Card.Header>
-                <Card.Body>
-                    <Card.Title>{expense.amount}€</Card.Title>
-                    <Card.Text>{expense.date.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long'})}</Card.Text>
-                    <Badge>{expense.category}</Badge>
-                </Card.Body>
+                <ModalContainer body={<UpdateExpenseForm expense={expense} />} title="Modifier une dépense">
+                    <Card.Body>
+                        <Card.Title className="expense-card-title">
+                            <div>
+                                <span className="expense-amount">{expense.amount}€</span><span> - {expense.title}</span>
+                            </div>
+                            <Badge bg="secondary">{expense.category}</Badge>
+                        </Card.Title>
+                        <Card.Text>{expense.date.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long'})}</Card.Text>
+                    </Card.Body>
+                </ModalContainer>
             </Card>
         )
     }
     return (
-        <Card className='expense' onClick={(e) => console.log(e)}>
-            <Card.Header>
-                <div className='expense-header'>
-                    Nouvelle dépense
-                </div>
-            </Card.Header>
-            <Card.Body className='new-expense-card'>
-                <PlusLg size={80} color='#0d6efd' />
-            </Card.Body>
-        </Card>
+        <div className="new-expense-card">
+            <ModalContainer body={<AddExpenseForm/>} title="Ajouter une dépense">
+                <Button>Ajouter</Button>
+            </ModalContainer>
+        </div>
     )
 }
 
